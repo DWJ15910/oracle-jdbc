@@ -98,28 +98,38 @@
 	
 	<!--  페이징 -->
 	<%
+		//페이징 네비게이션에 출력될 페이지의 수
 		int pagePerPage = 5;
+		//페이징 네비게이션의 시작부분
 		int startPage = (currentPage-1)/pagePerPage*pagePerPage+1;
+		//페이징 네비게이션의 끝부분
 		int endPage = startPage+(pagePerPage-1);
+		//페이징 네비게이션 출력의 마지막 페이지
 		int lastPage = totalRow/rowPerPage;
+		
+		//토탈 행의 수를 한페이지당 출력될 게시물의 행의 수로 나눴을때 0이 아니면 lastPage를 +1하여 페이지가 하나더 출력가능도록 한다
 		if(totalRow%rowPerPage!=0){
 			lastPage++;
 		}
+		//lastPage가 endPage보다 작을 때 endPage에 lastPage값을 넣어서 startPage~lastPage까지만 출력가능하도록 값 교체
 		if(endPage > lastPage){
 			endPage=lastPage;
 		}
+		
+		//이전 버튼의 경우에는 startPage가 1보다 클때만 출력가능하도록
 		if(startPage>1){
 	%>
 			<a href="<%=request.getContextPath() %>/windowsFunctionEmpList.jsp?currentPage=<%=startPage-pagePerPage%>">이전</a>
 	<%	
 		}
 	%>
-	<%
+	<%	//페이징 네비게이션에서 pagePerPage만큼 갯수가 나오도록 반복문 작성
 		for(int i = startPage; i<=endPage; i++){
 	%>
 			<a href="<%=request.getContextPath() %>/windowsFunctionEmpList.jsp?currentPage=<%=i%>"><%=i %></a>
 	<%
 		}
+		// 다음 버튼의 경우에는 lastPage가 endPage보다 클경우에만 출력가능하도록하여 마지막 페이징 네비게이션 전 까지만 출력가능하도록 변경
 		if(endPage<lastPage){
 	%>
 			<a href="<%=request.getContextPath() %>/windowsFunctionEmpList.jsp?currentPage=<%=pagePerPage+startPage%>">다음</a>
