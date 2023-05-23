@@ -79,9 +79,9 @@
 	<h1>급여 순위</h1>
 	<form action="<%=request.getContextPath()%>/rankNtileList.jsp">
 		<select name="rank">
-			<option value="rank()">rank()</option>
-			<option value="dense_rank()">DENSE_RANK()</option>
-			<option value="row_number()">ROW_NUMBER()</option>
+			<option value="rank()" <%= (request.getParameter("rank") != null && request.getParameter("rank").equals("rank()")) ? "selected" : "" %>>rank()</option>
+			<option value="dense_rank()" <%= (request.getParameter("rank") != null && request.getParameter("rank").equals("dense_rank()")) ? "selected" : "" %>>DENSE_RANK()</option>
+			<option value="row_number()" <%= (request.getParameter("rank") != null && request.getParameter("rank").equals("row_number()")) ? "selected" : "" %>>ROW_NUMBER()</option>
 		</select>
 		<button type="submit">전송</button>
 	</form>
@@ -128,19 +128,19 @@
 		if(startPage>1){
 				
 	%>
-			<a class="btn btn-primary" href="<%=request.getContextPath() %>/rankNtileList.jsp?currentPage=<%=startPage-pagePerPage%>">이전</a>
+			<a class="btn btn-primary" href="<%=request.getContextPath() %>/rankNtileList.jsp?currentPage=<%=startPage-pagePerPage%>&rank=<%=rank%>">이전</a>
 	<%	
 		}
 	%>
 	<%
 		for(int i = startPage; i<=endPage; i++){
 	%>
-			<a class="btn btn-primary" href="<%=request.getContextPath() %>/rankNtileList.jsp?currentPage=<%=i%>"><%=i %></a>
+			<a class="btn btn-primary" href="<%=request.getContextPath() %>/rankNtileList.jsp?currentPage=<%=i%>&rank=<%=rank%>"><%=i %></a>
 	<%
 		}
 		if(endPage<lastPage){
 	%>
-			<a class="btn btn-primary" href="<%=request.getContextPath() %>/rankNtileList.jsp?currentPage=<%=pagePerPage+startPage%>">다음</a>
+			<a class="btn btn-primary" href="<%=request.getContextPath() %>/rankNtileList.jsp?currentPage=<%=pagePerPage+startPage%>&rank=<%=rank%>">다음</a>
 	<%
 		}
 	%>
