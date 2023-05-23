@@ -37,27 +37,27 @@
 		endRow = totalRow;
 	}
 	
-	//RANK 함수 펑선 리스트 출력
-	String sql = "SELECT 번호, 아이디, 이름, 급여, 급여순위 " +
+	//row number 펑선 리스트 출력
+	String rownumSql = "SELECT 번호, 아이디, 이름, 급여, 급여순위 " +
 				"FROM (SELECT rownum 번호, 아이디, 이름, 급여, 급여순위 " +
-				"FROM (SELECT employee_id 아이디, last_name 이름, salary 급여, RANK() OVER (ORDER BY salary DESC) 급여순위 FROM employees)) " +
+				"FROM (SELECT employee_id 아이디, last_name 이름, salary 급여, ROW_NUMBER() OVER (ORDER BY salary DESC) 급여순위 FROM employees)) " +
 				"WHERE 번호 BETWEEN ? AND ?";
 	
-	PreparedStatement stmt = conn.prepareStatement(sql);
-	stmt.setInt(1,startRow);
-	stmt.setInt(2,endRow);
-	ResultSet rs = stmt.executeQuery();
+	PreparedStatement rownumStmt = conn.prepareStatement(rownumSql);
+	rownumStmt.setInt(1,startRow);
+	rownumStmt.setInt(2,endRow);
+	ResultSet rownumRs = rownumStmt.executeQuery();
 	
 	//리스트 제작
-	ArrayList<HashMap<String,Object>> list = new ArrayList<>();
-	while(rs.next()){
-		HashMap<String,Object> m = new HashMap<String, Object>();
-		m.put("번호",rs.getInt("번호"));
-		m.put("아이디",rs.getString("아이디"));
-		m.put("이름",rs.getString("이름"));
-		m.put("급여",rs.getInt("급여"));
-		m.put("급여순위",rs.getInt("급여순위"));
-		list.add(m);
+	ArrayList<HashMap<String,Object>> list3 = new ArrayList<>();
+	while(rownumRs.next()){
+		HashMap<String,Object> m3 = new HashMap<String, Object>();
+		m3.put("번호",rownumRs.getInt("번호"));
+		m3.put("아이디",rownumRs.getString("아이디"));
+		m3.put("이름",rownumRs.getString("이름"));
+		m3.put("급여",rownumRs.getInt("급여"));
+		m3.put("급여순위",rownumRs.getInt("급여순위"));
+		list3.add(m3);
 	}
 %>
 
@@ -68,7 +68,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>RANK()</h1>
+	<h1>ROW_NUMBER()</h1>
 	<table>
 		<tr>
 			<th>번호</th>
@@ -78,14 +78,14 @@
 			<th>급여순위</th>
 		</tr>
 		<%
-			for(HashMap<String,Object> m : list){
+			for(HashMap<String,Object> m3 : list3){
 		%>
 				<tr>
-					<td><%=(Integer)m.get("번호") %></td>
-					<td><%=m.get("아이디") %></td>
-					<td><%=m.get("이름") %></td>
-					<td><%=(Integer)m.get("급여") %></td>
-					<td><%=(Integer)m.get("급여순위") %></td>
+					<td><%=(Integer)m3.get("번호") %></td>
+					<td><%=m3.get("아이디") %></td>
+					<td><%=m3.get("이름") %></td>
+					<td><%=(Integer)m3.get("급여") %></td>
+					<td><%=(Integer)m3.get("급여순위") %></td>
 				</tr>
 		<%
 			}
@@ -106,19 +106,19 @@
 		}
 		if(startPage>1){
 	%>
-			<a href="<%=request.getContextPath() %>/rankFunctionEmpList.jsp?currentPage=<%=startPage-pagePerPage%>">이전</a>
+			<a href="<%=request.getContextPath() %>/rowNumberFunctionEmpList.jsp?currentPage=<%=startPage-pagePerPage%>">이전</a>
 	<%	
 		}
 	%>
 	<%
 		for(int i = startPage; i<=endPage; i++){
 	%>
-			<a href="<%=request.getContextPath() %>/rankFunctionEmpList.jsp?currentPage=<%=i%>"><%=i %></a>
+			<a href="<%=request.getContextPath() %>/rowNumberFunctionEmpList.jsp?currentPage=<%=i%>"><%=i %></a>
 	<%
 		}
 		if(endPage<lastPage){
 	%>
-			<a href="<%=request.getContextPath() %>/rankFunctionEmpList.jsp?currentPage=<%=pagePerPage+startPage%>">다음</a>
+			<a href="<%=request.getContextPath() %>/rowNumberFunctionEmpList.jsp?currentPage=<%=pagePerPage+startPage%>">다음</a>
 	<%
 		}
 	%>

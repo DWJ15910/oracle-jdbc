@@ -37,27 +37,27 @@
 		endRow = totalRow;
 	}
 	
-	//RANK 함수 펑선 리스트 출력
-	String sql = "SELECT 번호, 아이디, 이름, 급여, 급여순위 " +
+	//DENSE RANK 펑선 리스트 출력
+	String denseSql = "SELECT 번호, 아이디, 이름, 급여, 급여순위 " +
 				"FROM (SELECT rownum 번호, 아이디, 이름, 급여, 급여순위 " +
-				"FROM (SELECT employee_id 아이디, last_name 이름, salary 급여, RANK() OVER (ORDER BY salary DESC) 급여순위 FROM employees)) " +
+				"FROM (SELECT employee_id 아이디, last_name 이름, salary 급여, DENSE_RANK() OVER (ORDER BY salary DESC) 급여순위 FROM employees)) " +
 				"WHERE 번호 BETWEEN ? AND ?";
 	
-	PreparedStatement stmt = conn.prepareStatement(sql);
-	stmt.setInt(1,startRow);
-	stmt.setInt(2,endRow);
-	ResultSet rs = stmt.executeQuery();
+	PreparedStatement denseStmt = conn.prepareStatement(denseSql);
+	denseStmt.setInt(1,startRow);
+	denseStmt.setInt(2,endRow);
+	ResultSet denseRs = denseStmt.executeQuery();
 	
 	//리스트 제작
-	ArrayList<HashMap<String,Object>> list = new ArrayList<>();
-	while(rs.next()){
-		HashMap<String,Object> m = new HashMap<String, Object>();
-		m.put("번호",rs.getInt("번호"));
-		m.put("아이디",rs.getString("아이디"));
-		m.put("이름",rs.getString("이름"));
-		m.put("급여",rs.getInt("급여"));
-		m.put("급여순위",rs.getInt("급여순위"));
-		list.add(m);
+	ArrayList<HashMap<String,Object>> list2 = new ArrayList<>();
+	while(denseRs.next()){
+		HashMap<String,Object> m2 = new HashMap<String, Object>();
+		m2.put("번호",denseRs.getInt("번호"));
+		m2.put("아이디",denseRs.getString("아이디"));
+		m2.put("이름",denseRs.getString("이름"));
+		m2.put("급여",denseRs.getInt("급여"));
+		m2.put("급여순위",denseRs.getInt("급여순위"));
+		list2.add(m2);
 	}
 %>
 
@@ -68,7 +68,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>RANK()</h1>
+	<h1>DENSE_RANK()</h1>
 	<table>
 		<tr>
 			<th>번호</th>
@@ -78,14 +78,14 @@
 			<th>급여순위</th>
 		</tr>
 		<%
-			for(HashMap<String,Object> m : list){
+			for(HashMap<String,Object> m2 : list2){
 		%>
 				<tr>
-					<td><%=(Integer)m.get("번호") %></td>
-					<td><%=m.get("아이디") %></td>
-					<td><%=m.get("이름") %></td>
-					<td><%=(Integer)m.get("급여") %></td>
-					<td><%=(Integer)m.get("급여순위") %></td>
+					<td><%=(Integer)m2.get("번호") %></td>
+					<td><%=m2.get("아이디") %></td>
+					<td><%=m2.get("이름") %></td>
+					<td><%=(Integer)m2.get("급여") %></td>
+					<td><%=(Integer)m2.get("급여순위") %></td>
 				</tr>
 		<%
 			}
@@ -106,19 +106,19 @@
 		}
 		if(startPage>1){
 	%>
-			<a href="<%=request.getContextPath() %>/rankFunctionEmpList.jsp?currentPage=<%=startPage-pagePerPage%>">이전</a>
+			<a href="<%=request.getContextPath() %>/denseRankFunctionEmpList.jsp?currentPage=<%=startPage-pagePerPage%>">이전</a>
 	<%	
 		}
 	%>
 	<%
 		for(int i = startPage; i<=endPage; i++){
 	%>
-			<a href="<%=request.getContextPath() %>/rankFunctionEmpList.jsp?currentPage=<%=i%>"><%=i %></a>
+			<a href="<%=request.getContextPath() %>/denseRankFunctionEmpList.jsp?currentPage=<%=i%>"><%=i %></a>
 	<%
 		}
 		if(endPage<lastPage){
 	%>
-			<a href="<%=request.getContextPath() %>/rankFunctionEmpList.jsp?currentPage=<%=pagePerPage+startPage%>">다음</a>
+			<a href="<%=request.getContextPath() %>/denseRankFunctionEmpList.jsp?currentPage=<%=pagePerPage+startPage%>">다음</a>
 	<%
 		}
 	%>
